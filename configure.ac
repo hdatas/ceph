@@ -615,12 +615,25 @@ AC_ARG_WITH([kinetic],
             [AS_HELP_STRING([--with-kinetic], [build kinetic support])],
             [],
             [with_kinetic=no])
+
 # no pkg-config support yet
 #AS_IF([test "x$with_kinetic" = "xyes"],
 #            [PKG_CHECK_MODULES([KINETIC], [kinetic_client], [], [true])])
 AS_IF([test "x$with_kinetic" = "xyes"],
             [AC_DEFINE([HAVE_KINETIC], [1], [Defined if you have kinetic enabled])])
 AM_CONDITIONAL(WITH_KINETIC, [ test "$with_kinetic" = "yes" ])
+
+# hmem osd backend?
+AC_ARG_WITH([hmem],
+            [AS_HELP_STRING([--with-hmem], [build hmem support])],
+            [],
+            [with_hmem=no])
+# no pkg-config support yet
+#AS_IF([test "x$with_hmem" = "xyes"],
+#            [PKG_CHECK_MODULES([HMEM], [hmem_client], [], [true])])
+AS_IF([test "x$with_hmem" = "xyes"],
+            [AC_DEFINE([HAVE_HMEM], [1], [Defined if you have hmem enabled])])
+AM_CONDITIONAL(WITH_HMEM, [ test "$with_hmem" = "yes" ])
 
 # check for c++11 (but do not enable it)
 old_cxxflags="$CXXFLAGS"

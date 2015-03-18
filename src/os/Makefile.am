@@ -99,3 +99,9 @@ libos_la_CXXFLAGS += -std=gnu++11
 libos_la_LIBADD += -lkinetic_client -lprotobuf -lglog -lgflags libcrypto.a
 noinst_HEADERS += os/KineticStore.h
 endif
+
+if WITH_HMEM
+libos_la_SOURCES += os/HmemStore.cc
+libos_la_CXXFLAGS += -std=gnu++11
+noinst_HEADERS += os/HmemStore.h
+endif

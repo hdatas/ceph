@@ -53,6 +53,10 @@
 #include "KineticStore.h"
 #endif
 
+#ifdef HAVE_HMEM
+#include "HmemStore.h"
+#endif
+
 #include "common/ceph_crypto.h"
 using ceph::crypto::SHA1;
 

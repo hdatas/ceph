@@ -57,3 +57,7 @@ noinst_HEADERS += \
 if WITH_KINETIC
 libosd_la_CXXFLAGS += -std=gnu++11
 endif
+
+if WITH_HMEM
+libosd_la_CXXFLAGS += -std=gnu++11
+endif
