@@ -109,7 +109,7 @@ public:
     std::set<std::string> keys;
     std::set<std::string>::iterator keys_iter;
   public:
-    HmemWholeSpaceIteratorImpl(kinetic::BlockingKineticConnection *conn);
+    HmemWholeSpaceIteratorImpl();
     virtual ~HmemWholeSpaceIteratorImpl() { }
 
     int seek_to_first() {
@@ -132,7 +132,7 @@ public:
   /// Utility
   static string combine_strings(const string &prefix, const string &value);
   static int split_key(string in_prefix, string *prefix, string *key);
-  static bufferlist to_bufferlist(const kinetic::KineticRecord &record);
+  //static bufferlist to_bufferlist(const kinetic::KineticRecord &record);
   virtual uint64_t get_estimated_size(map<string,uint64_t> &extra) {
     // not used by the osd
     return 0;
@@ -142,7 +142,7 @@ public:
 protected:
   WholeSpaceIterator _get_iterator() {
     return ceph::shared_ptr<KeyValueDB::WholeSpaceIteratorImpl>(
-								new HmemWholeSpaceIteratorImpl(kinetic_conn.get()));
+								new HmemWholeSpaceIteratorImpl());
   }
 
   // TODO: remove snapshots from interface
