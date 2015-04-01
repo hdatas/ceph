@@ -237,7 +237,7 @@ int HmemStore::HmemWholeSpaceIteratorImpl::upper_bound(const string &prefix, con
   string bound = combine_strings(prefix, after);
   keys_iter = keys.upper_bound(bound);
   return 0;
-}`
+}
 
 int HmemStore::HmemWholeSpaceIteratorImpl::lower_bound(const string &prefix, const string &to) {
   dout(30) << "hmem iterator lower_bound()" << dendl;
@@ -293,5 +293,5 @@ bufferlist HmemStore::HmemWholeSpaceIteratorImpl::value() {
 
 int HmemStore::HmemWholeSpaceIteratorImpl::status() {
   dout(30) << "hmem iterator status()" << dendl;
-  return kinetic_status.ok() ? 0 : -1;
+  return 0 ;
 }
