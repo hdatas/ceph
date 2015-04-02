@@ -37,7 +37,8 @@ class HmemStore : public KeyValueDB {
   PerfCounters *logger;
   string devname;
   string storename;
-  unsigned long long kvshandle;
+  //unsigned long long kvshandle;
+  int64_t kvshandle;
 
   int do_open(ostream &out, bool create_if_missing);
 
@@ -133,6 +134,7 @@ public:
   static string combine_strings(const string &prefix, const string &value);
   static int split_key(string in_prefix, string *prefix, string *key);
   //static bufferlist to_bufferlist(const kinetic::KineticRecord &record);
+  static bufferlist to_bufferlist(struct kvs_ops &ops);
   virtual uint64_t get_estimated_size(map<string,uint64_t> &extra) {
     // not used by the osd
     return 0;

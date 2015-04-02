@@ -682,6 +682,9 @@ OPTION(kinetic_user_id, OPT_INT, 1) // kinetic user to authenticate as
 OPTION(kinetic_hmac_key, OPT_STR, "asdfasdf") // kinetic key to authenticate with
 OPTION(kinetic_use_ssl, OPT_BOOL, false) // whether to secure kinetic traffic with TLS
 
+OPTION(hmem_devname, OPT_STR, "") 
+OPTION(hmem_storename, OPT_STR, "")
+ 
 OPTION(rocksdb_compact_on_mount, OPT_BOOL, false)
 OPTION(rocksdb_write_buffer_size, OPT_U64, 0) // rocksdb write buffer size
 OPTION(rocksdb_target_file_size_base, OPT_U64, 0) // target file size for compaction

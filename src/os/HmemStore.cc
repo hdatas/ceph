@@ -17,8 +17,8 @@ int HmemStore::init()
 {
   // init defaults.  caller can override these if they want
   // prior to calling open.
-  devname = cct->_conf->devname;
-  storename = cct->_conf->storename;
+  devname = cct->_conf->hmem_devname;
+  storename = cct->_conf->hmem_storename;
   return 0;
 }
 
@@ -29,7 +29,7 @@ int HmemStore::_test_init(CephContext *c)
 
 int HmemStore::do_open(ostream &out, bool create_if_missing)
 {
-    int status  = kvs_open(devname, storename, &devhandle)    
+    int status  = kvs_open((char *)devname.c_str(), (char *)storename.c_str(), &kvshandle);
     if (!status) {
     derr << "Unable to connect to hmem store " << devname << ":" << storename
 	 << " : " << status<< dendl;
@@ -48,8 +48,8 @@ HmemStore::HmemStore(CephContext *c) :
   cct(c),
   logger(NULL)
 {
-    devname =  c->_conf->devname;
-    storename = c->_conf->storename;
+    devname =  c->_conf->hmem_devname;
+    storename = c->_conf->hmem_storename;
 }
 
 HmemStore::~HmemStore()
@@ -80,9 +80,9 @@ int HmemStore::submit_transaction(KeyValueDB::Transaction t)
       dout(30) << "hmem before put of " << it->key << " (" << data.length() << " bytes)" << dendl;
       
       cmd.cmd = PUT;
-      cmd.key =  it->key.c_str();
+      cmd.key =  (unsigned char *)it->key.c_str();
       cmd.key_len =  it->key.length();
-      cmd.value = it->data.c_str();
+      cmd.value = (unsigned char *)it->data.c_str();
       cmd.value_len = it->data.length();
       status = kvs_cmd(kvshandle, &cmd);
       dout(30) << "hmem after put of " << it->key << dendl;
@@ -90,7 +90,7 @@ int HmemStore::submit_transaction(KeyValueDB::Transaction t)
       assert(it->type == HMEM_OP_DELETE);
       dout(30) << "hmem before delete" << dendl;
       cmd.cmd = DELETE;
-      cmd.key = it->key.c_str();
+      cmd.key = (unsigned char *)it->key.c_str();
       cmd.key_len = it->key.length();
 
       status = kvs_cmd(kvshandle, &cmd);
@@ -148,7 +148,7 @@ int HmemStore::get(
     const std::set<string> &keys,
     std::map<string, bufferlist> *out)
 {
-  struct kvs_cmd cmd = {0};
+  struct kvs_ops cmd = {0};
   int status = 0;
   dout(30) << "hmem get prefix: " << prefix << " keys: " << keys << dendl;
   for (std::set<string>::const_iterator i = keys.begin();
@@ -157,7 +157,7 @@ int HmemStore::get(
     string key = combine_strings(prefix, *i);
     dout(30) << "before get key " << key << dendl;
     cmd.cmd = GET;
-    cmd.key =  key.c_str();
+    cmd.key =  (unsigned char *)key.c_str();
     cmd.key_len = key.length();
    
     kvs_cmd(kvshandle, &cmd);
@@ -165,7 +165,8 @@ int HmemStore::get(
     if (status < 0)
       break;
     dout(30) << "hmem get got key: " << key << dendl;
-    out->insert(make_pair(key, to_bufferlist(*cmd.value)));
+    //out->insert(make_pair(key, to_bufferlist(*cmd.value)));
+    out->insert(make_pair(key, to_bufferlist(cmd)));
   }
   logger->inc(l_hmem_gets);
   return 0;
@@ -179,7 +180,7 @@ string HmemStore::combine_strings(const string &prefix, const string &value)
   return out;
 }
 
-bufferlist HmemStore::to_bufferlist(struct kvs_cmd  &cmd)
+bufferlist HmemStore::to_bufferlist(struct kvs_ops  &cmd)
 {
   bufferlist bl;
   bl.append(*(cmd.value));
@@ -284,6 +285,7 @@ pair<string,string> HmemStore::HmemWholeSpaceIteratorImpl::raw_key() {
   return make_pair(prefix, key);
 }
 
+#if 0
 bufferlist HmemStore::HmemWholeSpaceIteratorImpl::value() {
   dout(30) << "hmem iterator value()" << dendl;
   //unique_ptr<kinetic::KineticRecord> record;
@@ -291,6 +293,7 @@ bufferlist HmemStore::HmemWholeSpaceIteratorImpl::value() {
   //return to_bufferlist(*record.get());
   return to_bufferlist("");
 }
+#endif
 
 int HmemStore::HmemWholeSpaceIteratorImpl::status() {
   dout(30) << "hmem iterator status()" << dendl;
