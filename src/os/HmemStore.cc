@@ -286,9 +286,10 @@ pair<string,string> HmemStore::HmemWholeSpaceIteratorImpl::raw_key() {
 
 bufferlist HmemStore::HmemWholeSpaceIteratorImpl::value() {
   dout(30) << "hmem iterator value()" << dendl;
-  unique_ptr<kinetic::KineticRecord> record;
-  kinetic_status = kinetic_conn->Get(*keys_iter, record);
-  return to_bufferlist(*record.get());
+  //unique_ptr<kinetic::KineticRecord> record;
+  //kinetic_status = kinetic_conn->Get(*keys_iter, record);
+  //return to_bufferlist(*record.get());
+  return to_bufferlist("");
 }
 
 int HmemStore::HmemWholeSpaceIteratorImpl::status() {
