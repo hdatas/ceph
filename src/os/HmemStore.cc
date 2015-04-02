@@ -37,8 +37,8 @@ int HmemStore::do_open(ostream &out, bool create_if_missing)
   }
 
   PerfCountersBuilder plb(g_ceph_context, "hmem", l_hmem_first, l_hmem_last);
-  plb.add_u64_counter(l_kinetic_gets, "hmem_get");
-  plb.add_u64_counter(l_kinetic_txns, "hmem_transaction");
+  plb.add_u64_counter(l_hmem_gets, "hmem_get");
+  plb.add_u64_counter(l_hmem_txns, "hmem_transaction");
   logger = plb.create_perf_counters();
   cct->get_perfcounters_collection()->add(logger);
   return 0;
