@@ -24,7 +24,7 @@ libos_la_SOURCES = \
 	os/ObjectStore.cc \
 	os/WBThrottle.cc \
         os/KeyValueDB.cc \
-	common/TrackedOp.cc
+	common/TrackedOp.cc 
 
 if LINUX
 libos_la_SOURCES += os/BtrfsFileStoreBackend.cc
@@ -73,6 +73,16 @@ noinst_HEADERS += \
 	os/WBThrottle.h \
 	os/XfsFileStoreBackend.h \
 	os/ZFSFileStoreBackend.h
+
+#if WITH_HMEM
+libos_la_SOURCES += os/HmemDBStore.cc
+libos_la_CXXFLAGS += -std=gnu++11
+libos_la_CXXFLAGS = ${AM_CXXFLAGS} ${LIBROCKSDB_CFLAGS} -std=gnu++11 -I/usr/include -Irocksdb/include
+noinst_HEADERS += os/HmemDBStore.h
+#noinst_LTLIBRARIES += libuftl.la
+#noinst_LIBRARIES += libuftl.a
+libos_la_LIBADD += -L/usr/local/lib -luftl
+#endif
 
 if WITH_SLIBROCKSDB
 libos_rocksdb_la_SOURCES = os/RocksDBStore.cc

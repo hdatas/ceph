@@ -9,6 +9,9 @@
 #ifdef HAVE_KINETIC
 #include "KineticStore.h"
 #endif
+#ifdef HAVE_HMEM
+#include "HmemDBStore.h"
+#endif
 
 KeyValueDB *KeyValueDB::create(CephContext *cct, const string& type,
 			       const string& dir)
@@ -28,6 +31,12 @@ KeyValueDB *KeyValueDB::create(CephContext *cct, const string& type,
     return new RocksDBStore(cct, dir);
   }
 #endif
+#ifdef HAVE_HMEM
+  if (type == "hmem") {
+    return new HmemDBStore(cct, dir);
+    //return new HmemStore(cct, dir);
+  }
+#endif
   return NULL;
 }
 
@@ -44,6 +53,12 @@ int KeyValueDB::test_init(const string& type, const string& dir)
 #ifdef HAVE_LIBROCKSDB
   if (type == "rocksdb") {
     return RocksDBStore::_test_init(dir);
+  }
+#endif
+#ifdef HAVE_HMEM
+  if (type == "hmem") {
+    return HmemDBStore::_test_init(dir);
+    //return HmemStore::_test_init(g_ceph_context);
   }
 #endif
   return -EINVAL;
