@@ -218,9 +218,9 @@ int HmemDBStore::submit_transaction_sync(KeyValueDB::Transaction t)
       if (status)
           derr << "Key Delete failed " << cmd.key << dendl; 
     }
-    return 0;
   } 
-  return s.ok() ? 0 : -1;
+  return 0;
+  //return s.ok() ? 0 : -1;
 }
 
 void HmemDBStore::HmemDBTransactionImpl::set(
